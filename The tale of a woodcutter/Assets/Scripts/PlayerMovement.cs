@@ -6,10 +6,10 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private float jumpForce;
-    [SerializeField] private Rigidbody2D rb;
     [SerializeField] private float rotationAmount;
-    private float horizontalInput;
-
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private PlayerAnimation anim;
+    [SerializeField] private float horizontalInput;
     private bool isRotated;
     private bool isOnGround;
     void Update()
@@ -28,12 +28,21 @@ public class PlayerMovement : MonoBehaviour
             transform.Rotate(Vector3.up * -rotationAmount);
             isRotated = false;
         }
+        if (horizontalInput != 0)
+        {
+            anim.isRunning = true;
+        }
+        else
+        {
+            anim.isRunning = false;
+        }
 
-        //Allows player to jump if on ground with space key
-        if (Input.GetKeyDown(KeyCode.Space) && isOnGround)
+        //Allows player to jump if on ground with W key
+        if (Input.GetKeyDown(KeyCode.W) && isOnGround)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             isOnGround = false;
+            anim.isJumping = true;
         }
     }
 
@@ -46,5 +55,6 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         isOnGround = true;
+        anim.isJumping = false;
     }
 }
